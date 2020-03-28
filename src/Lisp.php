@@ -124,6 +124,10 @@ final class Lisp
             return $env[$simplefied[0]];
         }
 
+        if ($op === 'array') {
+            return $simplefied;
+        }
+
         throw new RuntimeException("'{$op} function is not implemented.");
     }
 }
