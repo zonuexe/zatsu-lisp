@@ -35,7 +35,7 @@ final class Lisp
         // Special Forms
         if (isset($sexp[0]) && $sexp[0] === 'setq') {
             array_shift($sexp);
-            assert(count($sexp) === 2, 'setq accepts only 2 argument');
+            assert(count($sexp) === 2, 'setq accepts only 2 arguments');
             $name = array_shift($sexp);
             assert(is_string($name));
             $v = array_shift($sexp);
@@ -49,7 +49,28 @@ final class Lisp
             $ret = null;
             foreach ($sexp as $s) {
                 $ret = $this->dispatch($s, $env);
-                //var_dump(['s' => $s, 'ret' => $ret]);
+            }
+
+            return $ret;
+        }
+
+        if (isset($sexp[0]) && $sexp[0] === 'let') {
+            $new_env = $env;
+            array_shift($sexp);
+            assert(count($sexp) >= 2, 'let accepts only 2 or more arguments');
+
+            $variables = array_shift($sexp);
+            assert(is_array($variables), 'let must receive variable list by 2nd argument');
+
+            foreach ($variables as $v) {
+                assert(is_array($v) && count($v) == 2);
+                array_unshift($v, 'setq');
+                $this->dispatch($v, $new_env);
+            }
+
+            $ret = null;
+            foreach ($sexp as $s) {
+                $ret = $this->dispatch($s, $new_env);
             }
 
             return $ret;
