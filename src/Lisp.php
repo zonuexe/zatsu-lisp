@@ -25,8 +25,19 @@ final class Lisp
      */
     public function dispatch(string $op, array $args)
     {
+        $simplefied = [];
+        foreach ($args as $a) {
+            if (!is_array($a)) {
+                $simplefied[] = $a;
+                continue;
+            }
+
+            $op = array_shift($a);
+            $simplefied[] = $this->dispatch($op, $a);
+        }
+
         if ($op === '+') {
-            return array_sum($args);
+            return array_sum($simplefied);
         }
 
         throw new RuntimeException("'{$op} function is not implemented.");
