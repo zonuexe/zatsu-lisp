@@ -15,17 +15,18 @@ use RuntimeException;
 final class Lisp
 {
     /**
-     * @param array<mixed>
+     * @param array<int,mixed>
      * @return mixed
      */
-    public function eval(array $sexp)
+    public static function eval(array $sexp)
     {
         $env = [];
 
-        return $this->dispatch($sexp, $env);
+        return (new Lisp)->dispatch($sexp, $env);
     }
 
     /**
+     * @param array<int,mixed>
      * @return mixed
      */
     public function dispatch(array $sexp, array &$env)
