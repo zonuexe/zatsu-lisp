@@ -8,6 +8,7 @@ use function array_shift;
 use Closure;
 use function count;
 use function is_array;
+use function is_callable;
 use function is_string;
 use RuntimeException;
 
@@ -83,7 +84,7 @@ final class Lisp
             $args_index = $variables;
             $body = $sexp;
 
-            return function ($args) use ($args_index, $body, &$env) {
+            return function (...$args) use ($args_index, $body, &$env) {
                 $new_env = [];
                 foreach ($env as $i => &$v) {
                     $new_env[$i] = &$v;
@@ -115,8 +116,8 @@ final class Lisp
 
         $op = array_shift($simplefied);
 
-        if ($op instanceof Closure) {
-            return $op($simplefied);
+        if (is_callable($op)) {
+            return $op(...$simplefied);
         }
 
         if ($op === '+') {

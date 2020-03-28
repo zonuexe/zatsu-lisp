@@ -103,6 +103,10 @@ final class LispTest extends TestCase
                 ],
                 'expected' => [5, 3],
             ],
+            [
+                'sexp' => ['is_callable', fn() => false],
+                'expected' => true,
+            ],
         ];
     }
 }
