@@ -32,6 +32,17 @@ final class LispTest extends TestCase
                 'sexp' => ['+', 1, ['+', 2, 3]],
                 'expected' => 6,
             ],
+            [
+                'sexp' => ['progn', ['+', 1, 1]],
+                'expected' => 2,
+            ],
+            [
+                'sexp' => ['progn',
+                           ['setq', 'number', ['+', 1, 1]],
+                           ['$', 'number']
+                ],
+                'expected' => 2,
+            ],
         ];
     }
 }
