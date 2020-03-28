@@ -83,6 +83,26 @@ final class LispTest extends TestCase
                 ],
                 'expected' => [11, 21],
             ],
+            [
+                'sexp' => ['let',
+                           [
+                               ['constructor', ['lambda', ['v'],
+                                                ['lambda', [],
+                                                 ['setq', 'v', ['+', 1, ['$', 'v']]],
+                                                ]]],
+                               ['c1', [['$', 'constructor'], 0]],
+                               ['c2', [['$', 'constructor'], 0]],
+                           ],
+                           [['$', 'c1']],
+                           [['$', 'c2']],
+                           [['$', 'c1']],
+                           [['$', 'c1']],
+                           [['$', 'c2']],
+                           [['$', 'c1']],
+                           ['array', [['$', 'c1']], [['$', 'c2']]],
+                ],
+                'expected' => [5, 3],
+            ],
         ];
     }
 }

@@ -84,17 +84,21 @@ final class Lisp
             $body = $sexp;
 
             return function ($args) use ($args_index, $body, &$env) {
-                $let_vars = [];
+                $new_env = [];
+                foreach ($env as $i => &$v) {
+                    $new_env[$i] = &$v;
+                }
+                unset($v);
+
                 foreach ($args as $i => $v) {
                     $name = $args_index[$i];
-                    $let_vars[] = [$name, $v];
+                    $new_env[$name] = $v;
                 }
 
                 return $this->dispatch([
-                    'let',
-                    $let_vars,
+                    'progn',
                     ...$body
-                ], $env);
+                ], $new_env);
             };
         }
 
