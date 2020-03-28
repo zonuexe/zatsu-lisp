@@ -125,6 +125,16 @@ final class Lisp
             return array_sum($simplefied);
         }
 
+        if ($op === '%') {
+            assert(count($simplefied) === 2, '% operator accepts only 1 argument');
+            return $simplefied[0] % $simplefied[1];
+        }
+
+        if ($op === '=') {
+            assert(count($simplefied) === 2, '= operator accepts only 1 argument');
+            return $simplefied[0] === $simplefied[1];
+        }
+
         if ($op === '$') {
             assert(count($simplefied) === 1, '$ operator accepts only 1 argument');
             return $env[$simplefied[0]];
