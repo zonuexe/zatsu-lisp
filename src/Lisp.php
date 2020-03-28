@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace zonuexe\ZatsuLisp;
 
 use function array_shift;
+use Closure;
 use function count;
 use function is_array;
 use function is_string;
@@ -76,6 +77,27 @@ final class Lisp
             return $ret;
         }
 
+        if (isset($sexp[0]) && $sexp[0] === 'lambda') {
+            array_shift($sexp);
+            $variables = array_shift($sexp);
+            $args_index = $variables;
+            $body = $sexp;
+
+            return function ($args) use ($args_index, $body, &$env) {
+                $let_vars = [];
+                foreach ($args as $i => $v) {
+                    $name = $args_index[$i];
+                    $let_vars[] = [$name, $v];
+                }
+
+                return $this->dispatch([
+                    'let',
+                    $let_vars,
+                    ...$body
+                ], $env);
+            };
+        }
+
         // Dispatch Functions
         $simplefied = [];
         foreach ($sexp as $a) {
@@ -88,6 +110,10 @@ final class Lisp
         }
 
         $op = array_shift($simplefied);
+
+        if ($op instanceof Closure) {
+            return $op($simplefied);
+        }
 
         if ($op === '+') {
             return array_sum($simplefied);
